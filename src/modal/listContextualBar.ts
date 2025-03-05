@@ -97,6 +97,14 @@ export async function listReplyContextualBar(
 					{
 						text: {
 							type: 'plain_text',
+							text: t('Send_Text', language),
+							emoji: true,
+						},
+						value: `${ListContextualBarEnum.SEND} : ${reply.id}`,
+					},
+					{
+						text: {
+							type: 'plain_text',
 							text: t('Edit_Text', language),
 							emoji: true,
 						},
@@ -118,18 +126,6 @@ export async function listReplyContextualBar(
 			},
 		);
 
-		const sendButton = elementBuilder.addButton(
-			{
-				text: t('Send_Text', language),
-				style: ButtonStyle.PRIMARY,
-				value: `${ListContextualBarEnum.SEND} : ${reply.id}`,
-			},
-			{
-				blockId: `${ListContextualBarEnum.SEND_BLOCK_ID}_${reply.id}`,
-				actionId: `${ListContextualBarEnum.SEND_ACTION_ID}_${reply.id}`,
-			}
-		);
-
 		const name = reply.name.slice(0, 40);
 		const body = reply.body.slice(0, 60);
 		const replySection = blockBuilder.createSectionBlock({
@@ -137,9 +133,8 @@ export async function listReplyContextualBar(
 			accessory: accessoryElement,
 		});
 
-		const replyBody = blockBuilder.createSectionBlock({
-			text: body,
-			accessory: sendButton,
+		const replyBody = blockBuilder.createContextBlock({
+			contextElements: [body],
 		});
 
 		blocks.push(replySection, replyBody, divider);
